@@ -1,6 +1,6 @@
 fs = require('fs')
 fs.writeFileSync('notes.txt','hello world')
-fs.appendFile("notes.txt", " i am priya", (err) => {
+fs.appendFile("notes.txt", " i am text", (err) => {
     if (err) {
       console.log(err);
     }
@@ -9,7 +9,7 @@ fs.appendFile("notes.txt", " i am priya", (err) => {
         fs.readFileSync("notes.txt", "utf8"));
     }
   });
-// command argument it store  the input
+//command argument it store  the input
   const command = process.argv[2]
 // process is object it contains all methods 
   console.log(process.argv)

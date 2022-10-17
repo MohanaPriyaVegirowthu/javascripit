@@ -8,7 +8,7 @@ const get = require('./notes.js')
 // console.log(result)
 
 
-// console.log(validator.isEmail('priya@example.com'))
+// console.log(validator.isEmail('priyaexample.com'))
 // console.log(validator.isURL('https//:mead.io'))
 
 // msg = chalk.green('Success')
