@@ -18,6 +18,7 @@ const User = mongoose.model('User', {
             }
         }
     },
+    //special cha,number,lowercase
     password: {
         type: String,
         required: true,
