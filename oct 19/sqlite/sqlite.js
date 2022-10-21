@@ -19,7 +19,7 @@ let db = new sqlite3.Database('../task.db',sqlite3.OPEN_READWRITE, (err) => {
 
 
 let sql = `CREATE TABLE users(id INTEGER PRIMARY KEY,first_name TEXT NOT NULL,last_name TEXT NOT NULL,email TEXT NOT NULL UNIQUE,phone TEXT NOT NULL UNIQUE)`;
-db.run(sql)
+// db.run(sql)
 
 //Drop table
 //db.run("DROP TABLE users")
@@ -43,13 +43,17 @@ db.all(sql,[],(err,rows)=>{
 
 // Update the data
 
-// sql = 'UPDATE users SET first_name=? WHERE id =?';
-// db.run(sql,["mike",1],(err)=>{
+sql = 'UPDATE users SET first_name=?,last_name =?   WHERE id =?';
+db.run(sql,["hhhhhhh",4],(err)=>{
+  if(err) console.log("err")
+})
+
+//delete the data
+// sql = 'DELETE FROM users WHERE id =?';
+// db.run(sql,[1],(err)=>{
 //   if(err) console.log("err")
 // })
 
-//delete the data
-sql = 'DELETE FROM users WHERE id =?';
-db.run(sql,[1],(err)=>{
-  if(err) console.log("err")
-})
+
+sql = 'UPDATE users SET  first_name =?,last_name=?,'
+

@@ -14,7 +14,7 @@ app.post('/users', (req, res) => {
     user.save().then(() => {
         res.send(user)
     }).catch((e) => {
-        res.status(4000).send(e)
+        res.status(400).send(e)
     })
 })
 app.post('/tasks', (req, res) => {
