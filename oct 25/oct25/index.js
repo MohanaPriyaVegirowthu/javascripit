@@ -17,7 +17,29 @@ const port = process.env.PORT || 3000
 // app.use((req, res, next) => {
 //     res.status(503).send('Site is currently down. Check back soon!')
 // })
+const multer = require('multer')
+const upload = multer({
+    dest: 'images',
+    limits: {
+        fileSize: 1000000
+    },
+    fileFilter(req, file, cb) {
+        if (!file.originalname.endsWith('.pdf')) {
+            return cb(new Error('Please upload a Word document'))
+        }
 
+        cb(undefined, true)
+    }
+})
+// app.post('/upload',upload.single('upload'),(req,res)=>{
+//     res.send()
+    
+// })
+app.post('/upload', upload.single('upload'), (req, res) => {
+    res.send()
+}, (error, req, res, next) => {
+    res.status(400).send({ error: error.message })
+})
 
 
 
@@ -75,13 +97,13 @@ console.log(JSON.stringify(data))
 
 const User = require('./models/users')
 const Task = require('./models/Task')
-const main = async () => {
-    // const task = await Task.findById('6358b19d24d405d73db6e0e3')
-    // await task.populate('owner')
-    // console.log(task.owner)
-      const user = await User.findById('635766ad8262dcb2054bd8ba')
-      await user.populate('tasks')
-      console.log(user.tasks)
-} 
+// const main = async () => {
+//     // const task = await Task.findById('6358b19d24d405d73db6e0e3')
+//     // await task.populate('owner')
+//     // console.log(task.owner)
+//       const user = await User.findById('635766ad8262dcb2054bd8ba')
+//       await user.populate('tasks')
+//       console.log(user.tasks)
+// } 
 
-main()
+// main()
