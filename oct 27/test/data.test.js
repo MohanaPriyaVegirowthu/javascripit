@@ -38,7 +38,7 @@ test('Hello world!', () => {
 
 test('Async demo',(done) =>{
     setTimeout(()=>{
-      expect(1).toBe(2)
+      expect(1).toBe(1)
       done()
     },2000)
 })
