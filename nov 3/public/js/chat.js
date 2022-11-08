@@ -7,7 +7,10 @@ const $messages = document.querySelector('#messages')
 const locationMessageTemplate = document.querySelector('#location-message-template').innerHTML
 
 const messageTemplate = document.querySelector('#message-template').innerHTML
-const { username, room } = qs.parse(location.search, { ignoreQueryPrefix: true })
+let { username, room } = Qs.parse(location.search, { ignoreQueryPrefix: true })
+
+
+ 
 
 // socket.on('countUpdated', (count) => {
 //     console.log('The count has been updated!', count)
@@ -29,6 +32,7 @@ const { username, room } = qs.parse(location.search, { ignoreQueryPrefix: true }
 socket.on('message', (message) => {
     console.log(message)
     const html = Mustache.render(messageTemplate, {
+        username: message.username,
         message:message.text,
         createdAt: moment(message.createdAt).format('h:mm a')
     })
@@ -38,6 +42,7 @@ socket.on('message', (message) => {
 socket.on('locationMessage', (message) => {
     console.log(message)
     const html = Mustache.render(locationMessageTemplate, {
+        username: message.username,
         url: message.url,
         createdAt: moment(message.createdAt).format('h:mm a')
     })
@@ -83,4 +88,9 @@ $sendLocationButton.addEventListener('click', () => {
 })
 
 
-socket.emit('join', { username, room })
+socket.emit('join', { username, room }, (error) => {
+    if (error) {
+        alert(error)
+        location.href = '/'
+    }
+})
