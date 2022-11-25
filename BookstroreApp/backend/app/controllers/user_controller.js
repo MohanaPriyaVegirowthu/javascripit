@@ -19,9 +19,7 @@ exports.create = (req, res) => {
     });
   }
 
-  var otp =  Math.floor(1000 + Math.random() * 9000);
-  var dt = new Date();
-  var otp_expiry =  dt.setMinutes( dt.getMinutes() + 10 );
+ 
 
   // Create a Userss
   const userVal = {
@@ -31,12 +29,7 @@ exports.create = (req, res) => {
     gender: req.body.gender,
     user_type: req.body.user_type,
     password: req.body.password,
-    status: req.body.status,
-	  current_subscription: req.body.subscription_id,
-	  otp: otp,
-	  otp_expiry: otp_expiry,
-	  otp_verified:  false,
-    
+
    
   };
   User.create(userVal)
@@ -59,59 +52,6 @@ exports.create = (req, res) => {
 };
 
 
-// Update a users by the id in the request
-exports.resendCode = (req, res) => {
-  const id = req.params.id;
-  var otp =  Math.floor(1000 + Math.random() * 9000);
-  var dt = new Date();
-  var otp_expiry =  dt.setMinutes( dt.getMinutes() + 10 );
-  let jsonObject = {
-	  otp: otp,
-	  otp_expiry: otp_expiry
-  };
-
-  User.findOne({
-    where: { id: id },
-  })
-    .then((data) => {
-  User.update(jsonObject, {
-    where: { id: id },
-  })
-    .then((num) => {
-      if (num == 1) {
-	// SEND MAIL
-	
-	// SEND MAIL
-        return res.send({
-          status:200,
-          error:false,
-          message: "New OTP code sent",
-	        data: jsonObject
-        });
-      } else {
-        return res.send({
-          status:204,
-          error:true,
-          message: `Cannot update users with id=${id}. Maybe Users was not found or req.body is empty!`,
-        });
-      }
-    })
-    .catch((err) => {
-      return res.status(200).send({
-        status:204,
-        error:true,
-        message: "User not found",
-      });
-    });
-    })
-    .catch((err) => {
-      return res.status(200).send({
-        status:204,
-        error:true,
-        message: "User not found",
-      });
-    });
-};
 
 // Retrieve all users from the Userss.
 exports.findAll = (req, res, next) => {
@@ -178,13 +118,11 @@ exports.findOne = (req, res) => {
 exports.update = (req, res) => {
   const id = req.params.id;
   const userVal = {
-    user_name: req.body.data.user_name,
-    email: req.body.data.email_id,
-    mobile_no: req.body.data.phone,
-    gender: req.body.data.gender,
-    password: req.body.data.password_main,
-    current_subscription: req.body.data.subscription_id,
- 
+    user_name: req.body.user_name,
+    email: req.body.email_id,
+    mobile_no: req.body.phone,
+    gender: req.body.gender,
+
   };
 
   User.update(userVal, {
@@ -214,50 +152,7 @@ exports.update = (req, res) => {
     });
 };
 
-// Update a users by the id in the request
-exports.updatePassword = (req, res) => {
-  const id = req.params.id;
-  const pwd = encryption.encryptData(req.body.password);
-  let pwdVal = {
-	  password: req.body.data.password_main,
-  };
-//, password: pwd
-  User.findAll({
-    where: { id: id }
-  }).then((data) => {
-		if(data.length) {
-		  User.update(pwdVal, {
-			where: { id: id },
-		  })
-			.then((num) => {
-			  if (num == 1) {
-				res.send({
-				  message: "Password updated successfully",
-				});
-			  } else {
-				res.send({
-				  message: `Cannot update password with id=${id}. Maybe User was not found or req.body is empty!`,
-				});
-			  }
-			})
-			.catch((err) => {
-			  res.status(200).send({
-				message: "Error updating Password with id=" + id,
-			  });
-			});
-		} else {
-			res.send({
-			  message: `Incorrect current password`,
-			});
-		}
-    })
-    .catch((err) => {
-      res.status(200).send({
-        message:
-          err.message || "Some error occurred while retrieving Patients.",
-      });
-    });
-};
+
 
 // Delete a users with the specified id in the request
 exports.delete = (req, res) => {
@@ -296,14 +191,11 @@ exports.delete = (req, res) => {
 exports.login = (req, res) => {
   const email = encryption.encryptData(req.body.email);
   const password = encryption.encryptData(req.body.password);
-  const mobile_no = encryption.encryptData(req.body.phone);
-  const user_type = encryption.encryptData(req.body.role);
-  //console.log("email", encryption.decryptData(email));
-  const timezone = req.body.timezone;
-  //const timezone = 'Asia/Kolkata';
-  //  return;
+  
+
+
   var incVal = {};
-  if (req.body.email === undefined && req.body.phone === undefined) {
+  if (req.body.email === undefined && req.body.password === undefined) {
     res.status(200).send({
       message: "Please provide login credentials",
       data: "",
@@ -312,8 +204,7 @@ exports.login = (req, res) => {
   }
 
   if (
-    (req.body.email !== undefined && req.body.email == "") ||
-    (req.body.phone !== undefined && req.body.phone == "")
+    (req.body.email !== undefined && req.body.email == "" || req.body.password !== undefined && req.body.password== "")
   ) {
     res.status(200).send({
       message: "Login credentials cannot be empty",
@@ -326,14 +217,11 @@ exports.login = (req, res) => {
     if (req.body.email !== undefined) {
       incVal = { where: { email: email, password: password } };
     }
-    if (req.body.phone !== undefined) {
-      incVal = { where: { mobile_number: mobile_no, password: password } };
-    }
-
+  
   User.findOne(incVal)
     .then((data) => {
    
-      var randomNumber = Math.floor(1000 + Math.random() * 9000);
+     
       var userobj = {};
       userobj.userID = data.id;
       //userobj.email = data.email;
@@ -402,80 +290,6 @@ exports.logout = (req, res) => {
 
 };
 
-// Forget Password
-exports.forgetPassword = (req, res) => {
-  // Create a Doctor
-  const loginVal = {
-    email: encryption.encryptData(req.body.email),
-  };
-  var randonmnumber =  Math.floor(1000 + Math.random() * 9000);
-  var dt = new Date();
-  var newtime =  dt.setMinutes( dt.getMinutes() + 10 );
-  User.findAll({ where: loginVal })
-    .then((userData) => {
-      if (userData.length) {
-      var updateotp = {
-         otp: randonmnumber,
-         otp_expiry :newtime
-      }
-      User.update(updateotp, {
-        where: {id: userData[0].dataValues.id},
-       }).then((num) => {
-          if(num == 1) {
-             User.findAll({ where: {id: userData[0].dataValues.id} }) .then((userData1) => {
-            if (userData1.length) {
-              // SEND MAIL
-            
-	     // SEND MAIL
-             loginOutput = {
-                notification: {
-                  message: "Success",
-                  code: "200",
-                  type: "Success",
-                  is_auth: true,
-                  hint: "Response Sent",
-                },
-                data: {
-                  email: userData1[0].email,
-                  userID: userData1[0].id,
-                  otp: userData1[0].dataValues.otp,
-                  otpexpiry: new Date(userData1[0].dataValues.otp_expiry).toString('YYYY-MM-dd'),
-                },
-              };
-              res.send(loginOutput);
-            } else {
-              loginOutput = {
-                notification: {
-                  message: "Failure",
-                  code: "404",
-                  type: "Failure",
-                  is_auth: false,
-                  hint: "User record not found",
-                },
-                data: {},
-              };
-              res.send(loginOutput);
-            }
-          })
-          }
-        }) .catch((err) => {
-          console.log(err)
-          res.status(200).send({
-            message:
-              err.message ||
-              "Some error occurred while retrieving user information.",
-          });
-        });
-      }  
-    })
-    .catch((err) => {
-      res.status(200).send({
-        message:
-          err.message ||
-          "Some error occurred while retrieving user information.",
-      });
-    });
-};
 
 
 

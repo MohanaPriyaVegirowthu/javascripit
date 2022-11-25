@@ -19,4 +19,7 @@ const db = {};
 db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 db.users = require("./user.model")(sequelize, Sequelize);
+db.bookStoretbl = require("./books.model")(sequelize, Sequelize);
+db.usersBookScriptiontbl = require("./user_Booksubscription.model")(sequelize, Sequelize)
+db.booksAuthorstbl = require("./booksAuthors.model")(sequelize, Sequelize)
 module.exports = db;

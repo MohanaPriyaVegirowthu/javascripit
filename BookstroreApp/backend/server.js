@@ -1,4 +1,4 @@
-const express = require("express");
+ const express = require("express");
 const bodyParser = require("body-parser");
 var session = require('express-session');
 var cookieParser = require('cookie-parser');
@@ -27,15 +27,15 @@ app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
-const db = require("./app/models")
-
-
+const db = require("./app/models");
 db.sequelize.sync();
 // simple route
 app.get("/", (req, res) => {
-  res.json({ message: "Welcome to Book Store application." });
+  res.json({ message: "Welcome to Cloud 911 application." });
 });
 require("./app/routes/user_routes")(app);
+require("./app/routes/booksStore_routes")(app);
+require("./app/routes/user_booksubscription_routes")(app);
 
 app.use('/logout', function(req, res, next) {
  req.session.user_id = "";

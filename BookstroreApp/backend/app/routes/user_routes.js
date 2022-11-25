@@ -6,13 +6,6 @@ const VerifyToken = require('../config/verifyToken');
  // Create Login
  router.post("/login", Users.login);
 
- // Forget Password
- router.post("/forgetPassword", Users.forgetPassword);
-
- // Resend OTP Code
- router.get("/resendCode/:id",  Users.resendCode);
- // Retrieve a single Responder with id
-
  //router.all('*', VerifyToken);
 
  // Create a new User
@@ -34,8 +27,7 @@ const VerifyToken = require('../config/verifyToken');
  // Update a User with id
  router.put("/:id", Users.update);
 
- // Update a User Password with id
- router.put("/updatePassword/:id", Users.updatePassword);
+
 
  // Delete a User with id
  router.delete("/:id", Users.delete);

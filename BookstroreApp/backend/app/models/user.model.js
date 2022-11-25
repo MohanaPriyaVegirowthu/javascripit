@@ -23,36 +23,15 @@ module.exports = (sequelize, Sequelize) => {
         allowNull: true,
         type: Sequelize.STRING,
       },
-      current_subscription: {
-        allowNull: true,
-        type: Sequelize.INTEGER,
-      },
       gender: {
         allowNull: true,
         type: Sequelize.STRING,
       },
-      status: {
-        allowNull: true,
-        type: Sequelize.BOOLEAN,
-        defaultValue:1
-      },
-      registration_type: {
-        allowNull: true,
-        type: Sequelize.STRING,
-      },
-    
-      otp :{
-        allowNull:true,
-        type: Sequelize.STRING(4)
-      },
-      otp_expiry: {
-        allowNull:true,
-        type: Sequelize.DATE
-      },
       token: {
         allowNull:true,
         type: Sequelize.STRING,
-      }
+      },
+     
     },
 
     {
