@@ -18,7 +18,7 @@ const VerifyToken = require('../config/verifyToken');
  router.get("/", VerifyToken, Users.findAll);
 
  // Get User Count
- router.get("/getUserCount", Users.getUserCount);
+ //router.get("/getUserCount", Users.getUserCount);
 
  // Retrieve a single User with id
  router.get("/:id", Users.findOne);

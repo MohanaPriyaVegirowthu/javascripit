@@ -19,8 +19,7 @@ exports.create = (req, res) => {
     });
   }
 
- 
-
+  
   // Create a Userss
   const userVal = {
     user_name: req.body.user_name,
@@ -29,8 +28,7 @@ exports.create = (req, res) => {
     gender: req.body.gender,
     user_type: req.body.user_type,
     password: req.body.password,
-
-   
+  
   };
   User.create(userVal)
     .then((data) => {
@@ -76,23 +74,6 @@ exports.findAll = (req, res, next) => {
     });
 };
 
-// Retrieve all Users Count
-exports.getUserCount = (req, res) => {
-
-  User.count()
-    .then(function (count) {
-      res.send({ status:200,
-        error:false,data: count });
-    })
-    .catch((err) => {
-      res.status(200).send({
-        status:204,
-        error:true,
-        message:
-          err.message || "Some error occurred while retrieving " + user_type,
-      });
-    });
-};
 
 // Find a single users with an id
 exports.findOne = (req, res) => {
@@ -117,19 +98,22 @@ exports.findOne = (req, res) => {
 // Update a users by the id in the request
 exports.update = (req, res) => {
   const id = req.params.id;
-  const userVal = {
-    user_name: req.body.user_name,
-    email: req.body.email_id,
-    mobile_no: req.body.phone,
-    gender: req.body.gender,
 
+  const userVal = {
+    mobile_no: req.body.mobile_no,
+    password: req.body.password,
+    user_name: req.body.user_name,
+    user_type : req.body.user_type,
+    gender: req.body.gender,
+    email: req.body.email 
   };
 
   User.update(userVal, {
     where: { id: id },
   })
     .then((num) => {
-      if (num == 1) {
+
+      if (num[0] === 1) {
         res.send({
           status:200,
           error:false,
@@ -191,11 +175,9 @@ exports.delete = (req, res) => {
 exports.login = (req, res) => {
   const email = encryption.encryptData(req.body.email);
   const password = encryption.encryptData(req.body.password);
-  
-
-
+;
   var incVal = {};
-  if (req.body.email === undefined && req.body.password === undefined) {
+  if (req.body.email === undefined ) {
     res.status(200).send({
       message: "Please provide login credentials",
       data: "",
@@ -204,7 +186,7 @@ exports.login = (req, res) => {
   }
 
   if (
-    (req.body.email !== undefined && req.body.email == "" || req.body.password !== undefined && req.body.password== "")
+    (req.body.email == "")
   ) {
     res.status(200).send({
       message: "Login credentials cannot be empty",
@@ -217,31 +199,17 @@ exports.login = (req, res) => {
     if (req.body.email !== undefined) {
       incVal = { where: { email: email, password: password } };
     }
-  
+
+
+    
   User.findOne(incVal)
-    .then((data) => {
-   
-     
+    .then((data) => {    
       var userobj = {};
       userobj.userID = data.id;
-      //userobj.email = data.email;
-      userobj.name = data.name;
-      //userobj.mobile_number = data.mobile_number;
-      userobj.user_type = data.user_type;
-
-
+      userobj.user_name = data.user_name;
       var token = jwt.sign(userobj, dbConfig.SECRET);
-
-      userobj.selected_language = data.selected_language;
       // ----------- Token is generated ---------------- //
-      userobj.accessToken = token;   
-
-     
-      let jsonObject = {    
-        token:token      
-      };
-      // End Token Expair changes by 21-04-2021
-      User.update(jsonObject, { where: { id: data.id }})
+      userobj.accessToken = token;      
       loginOutput = {
         notification: {
           message: "Login successful !!",
@@ -289,7 +257,6 @@ exports.logout = (req, res) => {
 		
 
 };
-
 
 
 

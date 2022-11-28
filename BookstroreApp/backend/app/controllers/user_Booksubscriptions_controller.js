@@ -21,7 +21,7 @@ exports.create = (req, res) => {
             res.status(500).send({
               status:500, error:true,
               message:
-                    err.message || "Some error occurred while retrieving Users.",
+                err.message || "Some error occurred while retrieving Users.",
             });
           });
   
@@ -32,7 +32,7 @@ exports.create = (req, res) => {
 exports.findAll = (req, res, next) => {
   User.hasMany(UserBooksubscriptiontbl, { foreignKey: "user_id" });
   UserBooksubscriptiontbl.belongsTo(User, { foreignKey: "user_id" });
-  BookStoretbl.findAll(UserBooksubscriptiontbl, {foreignKey:"book_id"});
+  BookStoretbl.hasMany(UserBooksubscriptiontbl, {foreignKey:"book_id"});
   UserBooksubscriptiontbl.belongsTo(BookStoretbl, { foreignKey: "book_id" });
   UserBooksubscriptiontbl.findAll({
       include: [         
@@ -44,8 +44,8 @@ exports.findAll = (req, res, next) => {
         {
           model: BookStoretbl,
           required: true,
-          attributes: [ "id", "bookname"],
-        },
+          attributes: [ "id", "bookname" ],
+        }
       ],
         attributes: {
           exclude: ["createAt","updatedAt"],
@@ -90,6 +90,7 @@ exports.update = (req, res) => {
     user_id : req.body.user_id,
     fromDate: req.body.fromDate,
     toDate: req.body.toDate,
+    price: req.body.price,
     book_id: req.body.book_id, 
     status: 1,
   };
@@ -161,4 +162,3 @@ exports.getSubscriptionCount = (req, res) => {
       });
     });
 };
-

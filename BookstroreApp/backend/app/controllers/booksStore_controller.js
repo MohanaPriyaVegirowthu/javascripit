@@ -44,10 +44,10 @@ exports.findAll = (req, res, next) => {
     var sortType = ["id", "DESC"];
     BooksStoretbl.findAll({     
         attributes: {
-          exclude: ["updatedAt"],
-        },
-        order: [sortType]
-      })
+            exclude: ["updatedAt"],
+          },
+          order: [sortType]
+        })
     .then((data) => {
     res.send({status:200, error:false, message:"Books is fetch Successfully",data:data});
     })
@@ -78,9 +78,8 @@ exports.update = (req, res) => {
   const id = req.params.id;
   const BooksVal = {
     bookname : req.body.bookname,
-    type: req.body.type,
     author: req.body.author, 
-    price: price,
+    price: req.body.price,
     status: 1,
   };
   BooksStoretbl.update(BooksVal, {
